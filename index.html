@@ -24,8 +24,8 @@
             display: flex;
             justify-content: space-between;
         }
-        input[type="number"] {
-            width: 50px;
+        input[type="text"] {
+            width: 150px;
         }
         .form-group {
             display: flex;
@@ -36,33 +36,47 @@
         }
     </style>
     <script>
+        const teams = {};
+
         function updateTable() {
-            const redWon = parseInt(document.getElementById('redWon').value) || 0;
-            const redLost = parseInt(document.getElementById('redLost').value) || 0;
-            const redPoints = redWon * 3;
+            const winner = document.getElementById('winner').value.trim();
+            const loser = document.getElementById('loser').value.trim();
 
-            const blueWon = parseInt(document.getElementById('blueWon').value) || 0;
-            const blueLost = parseInt(document.getElementById('blueLost').value) || 0;
-            const bluePoints = blueWon * 3;
+            if (winner && loser && winner !== loser) {
+                if (!teams[winner]) {
+                    teams[winner] = { won: 0, lost: 0, points: 0 };
+                }
+                if (!teams[loser]) {
+                    teams[loser] = { won: 0, lost: 0, points: 0 };
+                }
 
-            const greenWon = parseInt(document.getElementById('greenWon').value) || 0;
-            const greenLost = parseInt(document.getElementById('greenLost').value) || 0;
-            const greenPoints = greenWon * 3;
+                teams[winner].won += 1;
+                teams[winner].points += 3;
+                teams[loser].lost += 1;
 
-            const teams = [
-                { name: 'Red', won: redWon, lost: redLost, points: redPoints },
-                { name: 'Blue', won: blueWon, lost: blueLost, points: bluePoints },
-                { name: 'Green', won: greenWon, lost: greenLost, points: greenPoints }
-            ];
+                const sortedTeams = Object.keys(teams).map(name => ({
+                    name,
+                    ...teams[name]
+                })).sort((a, b) => b.points - a.points);
 
-            teams.sort((a, b) => b.points - a.points);
+                const tbody = document.querySelector('tbody');
+                tbody.innerHTML = '';
+                sortedTeams.forEach((team, index) => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${index + 1}</td>
+                        <td>${team.name}</td>
+                        <td>${team.won}</td>
+                        <td>${team.lost}</td>
+                        <td>${team.points}</td>
+                    `;
+                    tbody.appendChild(row);
+                });
 
-            for (let i = 0; i < teams.length; i++) {
-                document.getElementById(`pos${i + 1}`).textContent = i + 1;
-                document.getElementById(`team${i + 1}`).textContent = teams[i].name;
-                document.getElementById(`won${i + 1}`).textContent = teams[i].won;
-                document.getElementById(`lost${i + 1}`).textContent = teams[i].lost;
-                document.getElementById(`points${i + 1}`).textContent = teams[i].points;
+                document.getElementById('winner').value = '';
+                document.getElementById('loser').value = '';
+            } else {
+                alert('Please enter valid names for both winner and loser.');
             }
         }
     </script>
@@ -70,24 +84,14 @@
 <body>
     <form onsubmit="updateTable(); return false;">
         <div class="form-group">
-            <label for="redWon">Red Ganhou:</label>
-            <input type="number" id="redWon" name="redWon" min="0">
-            <label for="redLost">Red Perdeu:</label>
-            <input type="number" id="redLost" name="redLost" min="0">
+            <label for="winner">Nome do Vencedor:</label>
+            <input type="text" id="winner" name="winner">
         </div>
         <div class="form-group">
-            <label for="blueWon">Blue Ganhou:</label>
-            <input type="number" id="blueWon" name="blueWon" min="0">
-            <label for="blueLost">Blue Perdeu:</label>
-            <input type="number" id="blueLost" name="blueLost" min="0">
+            <label for="loser">Nome do Perdedor:</label>
+            <input type="text" id="loser" name="loser">
         </div>
-        <div class="form-group">
-            <label for="greenWon">Green Ganhou:</label>
-            <input type="number" id="greenWon" name="greenWon" min="0">
-            <label for="greenLost">Green Perdeu:</label>
-            <input type="number" id="greenLost" name="greenLost" min="0">
-        </div>
-        <button type="submit">Update Table</button>
+        <button type="submit">Atualizar Tabela</button>
     </form>
 
     <table>
@@ -101,27 +105,7 @@
             </tr>
         </thead>
         <tbody>
-            <tr>
-                <td id="pos1">1</td>
-                <td id="team1">Red</td>
-                <td id="won1">0</td>
-                <td id="lost1">0</td>
-                <td id="points1">0</td>
-            </tr>
-            <tr>
-                <td id="pos2">2</td>
-                <td id="team2">Blue</td>
-                <td id="won2">0</td>
-                <td id="lost2">0</td>
-                <td id="points2">0</td>
-            </tr>
-            <tr>
-                <td id="pos3">3</td>
-                <td id="team3">Green</td>
-                <td id="won3">0</td>
-                <td id="lost3">0</td>
-                <td id="points3">0</td>
-            </tr>
+            <!-- Rows will be dynamically added here -->
         </tbody>
     </table>
 </body>
