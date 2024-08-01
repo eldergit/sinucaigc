@@ -18,60 +18,109 @@
         th {
             background-color: #f2f2f2;
         }
+        form {
+            width: 50%;
+            margin: 20px auto;
+            display: flex;
+            justify-content: space-between;
+        }
+        input[type="number"] {
+            width: 50px;
+        }
+        .form-group {
+            display: flex;
+            align-items: center;
+        }
+        .form-group label {
+            margin-right: 10px;
+        }
     </style>
+    <script>
+        function updateTable() {
+            const redWon = parseInt(document.getElementById('redWon').value) || 0;
+            const redLost = parseInt(document.getElementById('redLost').value) || 0;
+            const redPoints = redWon * 3;
+
+            const blueWon = parseInt(document.getElementById('blueWon').value) || 0;
+            const blueLost = parseInt(document.getElementById('blueLost').value) || 0;
+            const bluePoints = blueWon * 3;
+
+            const greenWon = parseInt(document.getElementById('greenWon').value) || 0;
+            const greenLost = parseInt(document.getElementById('greenLost').value) || 0;
+            const greenPoints = greenWon * 3;
+
+            const teams = [
+                { name: 'Red', won: redWon, lost: redLost, points: redPoints },
+                { name: 'Blue', won: blueWon, lost: blueLost, points: bluePoints },
+                { name: 'Green', won: greenWon, lost: greenLost, points: greenPoints }
+            ];
+
+            teams.sort((a, b) => b.points - a.points);
+
+            for (let i = 0; i < teams.length; i++) {
+                document.getElementById(`pos${i + 1}`).textContent = i + 1;
+                document.getElementById(`team${i + 1}`).textContent = teams[i].name;
+                document.getElementById(`won${i + 1}`).textContent = teams[i].won;
+                document.getElementById(`lost${i + 1}`).textContent = teams[i].lost;
+                document.getElementById(`points${i + 1}`).textContent = teams[i].points;
+            }
+        }
+    </script>
 </head>
 <body>
+    <form onsubmit="updateTable(); return false;">
+        <div class="form-group">
+            <label for="redWon">Red Ganhou:</label>
+            <input type="number" id="redWon" name="redWon" min="0">
+            <label for="redLost">Red Perdeu:</label>
+            <input type="number" id="redLost" name="redLost" min="0">
+        </div>
+        <div class="form-group">
+            <label for="blueWon">Blue Ganhou:</label>
+            <input type="number" id="blueWon" name="blueWon" min="0">
+            <label for="blueLost">Blue Perdeu:</label>
+            <input type="number" id="blueLost" name="blueLost" min="0">
+        </div>
+        <div class="form-group">
+            <label for="greenWon">Green Ganhou:</label>
+            <input type="number" id="greenWon" name="greenWon" min="0">
+            <label for="greenLost">Green Perdeu:</label>
+            <input type="number" id="greenLost" name="greenLost" min="0">
+        </div>
+        <button type="submit">Update Table</button>
+    </form>
+
     <table>
         <thead>
             <tr>
-                <th>Pos</th>
-                <th>Team</th>
-                <th>Pld</th>
-                <th>W</th>
-                <th>D</th>
-                <th>L</th>
-                <th>GF</th>
-                <th>GA</th>
-                <th>GD</th>
-                <th>Pts</th>
+                <th>Posição</th>
+                <th>Jogador</th>
+                <th>Ganhou</th>
+                <th>Perdeu</th>
+                <th>Pontos</th>
             </tr>
         </thead>
         <tbody>
             <tr>
-                <td>1</td>
-                <td>Red</td>
-                <td>2</td>
-                <td>1</td>
-                <td>0</td>
-                <td>1</td>
-                <td>?</td>
-                <td>?</td>
-                <td>?</td>
-                <td>3</td>
+                <td id="pos1">1</td>
+                <td id="team1">Red</td>
+                <td id="won1">0</td>
+                <td id="lost1">0</td>
+                <td id="points1">0</td>
             </tr>
             <tr>
-                <td>2</td>
-                <td>Blue</td>
-                <td>2</td>
-                <td>1</td>
-                <td>0</td>
-                <td>1</td>
-                <td>?</td>
-                <td>?</td>
-                <td>?</td>
-                <td>3</td>
+                <td id="pos2">2</td>
+                <td id="team2">Blue</td>
+                <td id="won2">0</td>
+                <td id="lost2">0</td>
+                <td id="points2">0</td>
             </tr>
             <tr>
-                <td>3</td>
-                <td>Green</td>
-                <td>2</td>
-                <td>1</td>
-                <td>0</td>
-                <td>1</td>
-                <td>?</td>
-                <td>?</td>
-                <td>?</td>
-                <td>3</td>
+                <td id="pos3">3</td>
+                <td id="team3">Green</td>
+                <td id="won3">0</td>
+                <td id="lost3">0</td>
+                <td id="points3">0</td>
             </tr>
         </tbody>
     </table>
